@@ -1,0 +1,31 @@
+{
+  "id": "d1d4af80-1996-4838-a946-0ba5b77bd427",
+  "name": "ems.us",
+  "publisher": "TST",
+  "version": "1.0.0.0",
+  "brief": "",
+  "description": "",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "",
+  "url": "",
+  "logo": "",
+  "dependencies": [],
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "22.0.0.0",
+  "idRanges": [
+    {
+      "from": 53001,
+      "to": 53100
+    }
+  ],
+  "features": [
+    "NoImplicitWith"
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": false,
+    "includeSourceInSymbolFile": false
+  }
+}
