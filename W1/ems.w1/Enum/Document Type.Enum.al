@@ -1,4 +1,4 @@
-enum 52101 "Documnet Type"
+enum 52101 "Document Type"
 {
     Extensible = true;
 

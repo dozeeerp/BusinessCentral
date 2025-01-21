@@ -13,7 +13,7 @@ tableextension 52100 "EMS Customer" extends Customer
             DataClassification = CustomerContent;
             Caption = 'Partner ID';
         }
-        field(50002; "Is Partner"; Boolean)
+        field(52102; "Is Partner"; Boolean)
         {
             DataClassification = CustomerContent;
             Caption = 'Is Partner';

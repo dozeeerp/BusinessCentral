@@ -1,6 +1,8 @@
 table 52101 "License Request"
 {
     DataClassification = CustomerContent;
+    LookupPageId = "License Requests";
+    DrillDownPageId = "License Requests";
 
     fields
     {
@@ -224,7 +226,7 @@ table 52101 "License Request"
             DataClassification = CustomerContent;
             Caption = 'Partner ID';
         }
-        field(30; "Document Type"; Enum "Documnet Type")
+        field(30; "Document Type"; Enum "Document Type")
         {
             DataClassification = CustomerContent;
             Caption = 'Document Type';
@@ -347,7 +349,15 @@ table 52101 "License Request"
 
     trigger OnInsert()
     begin
-
+        InitInsert();
+        // if Dunning then begin
+        //     Dunning := false;
+        //     "Dunning Type" := "Dunning Type"::" ";
+        // end;
+        // "Renewal/Ext Lic No." := '';
+        if "Request Date" = 0D then
+            "Request Date" := WorkDate();
+        SetView('');
     end;
 
     trigger OnModify()
@@ -356,8 +366,29 @@ table 52101 "License Request"
     end;
 
     trigger OnDelete()
+    var
+        MicApprovalsMgt: Codeunit "Approvals Mgmt.";
+        LicReq2: record "License Request";
     begin
-
+        // if "Document Type" in ["Document Type"::Renewal, "Document Type"::Extension] then begin
+        //     LicReq2.Reset();
+        //     LicReq2.SetCurrentKey("License No.");
+        //     case "Document Type" of
+        //         "Document Type"::Renewal:
+        //             begin
+        //                 LicReq2.SetRange("License No.", rec."Parent Renewal Of");
+        //                 if LicReq2.FindFirst() then
+        //                     LicReq2.Renewed := false;
+        //             end;
+        //         "Document Type"::Extension:
+        //             begin
+        //                 LicReq2.SetRange("License No.", rec."Parent Extension Of");
+        //                 if LicReq2.FindFirst() then
+        //                     LicReq2.Extended := false;
+        //             end;
+        //     end;
+        // end;
+        MicApprovalsMgt.OnDeleteRecordInApprovalRequest(rec.RecordId);
     end;
 
     trigger OnRename()
@@ -370,6 +401,7 @@ table 52101 "License Request"
         Salesperson: Record "Salesperson/Purchaser";
         PostCode: Record "Post Code";
         DimMgt: Codeunit DimensionManagement;
+        LicenseRequest: Record "License Request";
         DoYouWantToKeepExistingDimensionsQst: Label 'This will change the dimension specified on the document. Do you want to recalculate/update dimensions?';
         ConfirmChangeQst: Label 'Do you want to change %1?', Comment = '%1 = a Field Caption like Currency Code';
         LICToCustomerTxt: Label 'Customer Name';
@@ -386,9 +418,38 @@ table 52101 "License Request"
         HideValidationDialog: Boolean;
         SkipLICToContact: Boolean;
 
+    local procedure InitInsert()
+    var
+        LicenseRequest2: Record "License Request";
+        NoSeries: Codeunit "No. Series";
+    begin
+        if "No." = '' then begin
+            GetEmsSetup();
+            "No. Series" := EmsSetup."License Request Nos.";
+            if NoSeries.AreRelated("No. Series", xRec."No. Series") then
+                "No. Series" := xRec."No. Series";
+            "No." := NoSeries.GetNextNo("No. Series", WorkDate());
+            LicenseRequest2.ReadIsolation(IsolationLevel::ReadUncommitted);
+            LicenseRequest2.SetLoadFields("No.");
+            while LicenseRequest2.Get("No.") do
+                "No." := NoSeries.GetNextNo("No. Series", WorkDate());
+        end;
+    end;
+
     local procedure InitRecord()
     begin
         GetEmsSetup();
+    end;
+
+    procedure AssistEdit(OldLicenseRequest: Record "License Request"): Boolean
+    begin
+        LicenseRequest.Copy(Rec);
+        GetEmsSetup();
+        if NoSeries.LookupRelatedNoSeries(EmsSetup."License Request Nos.", OldLicenseRequest."No. Series", LicenseRequest."No. Series") then begin
+            LicenseRequest."No." := NoSeries.GetNextNo(LicenseRequest."No. Series");
+            Rec := LicenseRequest;
+            exit(true);
+        end;
     end;
 
     local procedure GetEmsSetup()
@@ -840,6 +901,71 @@ table 52101 "License Request"
             exit(true);
         end;
         exit(false);
+    end;
+
+    internal procedure LicenseLinesExist(): Boolean
+    begin
+        // LicenseLine.Reset();
+        // LicenseLine.SetRange("License Type", "License Type");
+        // LicenseLine.SetRange("License Request No.", "No.");
+        // exit(not LicenseLine.IsEmpty);
+        exit(true);
+    end;
+
+    internal procedure CheckMandateFields()
+    var
+        CLE: Record "Cust. Ledger Entry";
+    begin
+        // TestField("License Code");
+        // TestField(Duration);
+        // TestField("License Qty.");
+        // TestField("LIC-to E-Mail");
+        // IF /*"License Type" = LicenseRequest."License Type"::Commercial*/ rec."Pre-paid" then begin
+        //     TestField("Invoice No");
+        //     TestField("Invoice Qty");
+        //     TestField("Invoice Amount");
+        //     IF Rec."Invoice Qty" <> Rec."License Qty." then
+        //         Error('Quantity should be same as invoice quantity');
+        //     IF Rec.Duration <> Rec."Invoice Duration" then
+        //         Error('Duration should be same as invoice duration');
+        //     // IF Rec."Pre-paid" then begin
+        //     CLE.Reset();
+        //     CLE.SetRange("Document No.", Rec."Invoice No");
+        //     CLE.SetRange("Document Type", CLE."Document Type"::Invoice);
+        //     IF CLE.FindFirst() then begin
+        //         CLE.CalcFields("Remaining Amount", "Original Amount");
+        //         IF CLE."Remaining Amount" >= CLE."Original Amount" then
+        //             Error('No Payment received against Invoice: %1.', Rec."Invoice No");
+        //     end;
+        // end;
+        // // end;
+        // if "License Type" = LicenseRequest."License Type"::MillionICU then begin
+        //     TestField("Doner ID");
+        //     TestField("License Value");
+        // end;
+    end;
+
+    [IntegrationEvent(TRUE, false)]
+    procedure OnCheckLicenseReleaseRestrictions()
+    begin
+    end;
+
+    procedure CheckLicenseReleaseRestrictions()
+    var
+        LicApprovalsMgmt: Codeunit "Licesne Approval Mgmt.";
+    begin
+        OnCheckLicenseReleaseRestrictions;
+        LicApprovalsMgmt.PrePostApprovalCheckLicense(Rec);
+    end;
+
+    [IntegrationEvent(TRUE, false)]
+    procedure OnCheckLicenseActivationRestrictions()
+    begin
+    end;
+
+    procedure CheckLicenseActivationRestrictions()
+    begin
+        OnCheckLicenseActivationRestrictions();
     end;
 
     procedure SetStatusCheck(Suspend: Boolean)
