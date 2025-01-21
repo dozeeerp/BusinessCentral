@@ -1,5 +1,9 @@
 {
   "country": "in",
   "appFolders": [],
-  "testFolders": []
+  "testFolders": [],
+  "DeployToQA":{
+    "EnvironmentName": "QA",
+    "continuousDeployment": true
+  }
 }
