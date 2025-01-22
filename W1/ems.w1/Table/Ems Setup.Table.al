@@ -1,6 +1,8 @@
 table 52100 "EMS Setup"
 {
     DataClassification = CustomerContent;
+    LookupPageId = "Ems Setup";
+    DrillDownPageId = "Ems Setup";
 
     fields
     {
