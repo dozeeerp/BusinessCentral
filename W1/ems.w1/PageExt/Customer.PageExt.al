@@ -39,6 +39,83 @@ pageextension 52100 EMS_Customer extends "Customer Card"
                     Editable = Rec."Partner ID" = '';
                     ToolTip = 'Specifies if the Customer is partner/distribotr wo will manage another customer.';
                 }
+                field("License Details"; Rec."License Details")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the value of the Available Licenses field.';
+
+                    trigger OnDrillDown()
+                    var
+                        LicenseRequest_lPge: Page "Active Licenses";
+                        LicenseRequest_lRec: Record "License Request";
+                    begin
+                        LicenseRequest_lRec.Reset();
+                        LicenseRequest_lRec.SetRange("Customer No.", Rec."No.");
+                        LicenseRequest_lRec.SetRange(Status, LicenseRequest_lRec.Status::Active);
+                        LicenseRequest_lPge.SetTableView(LicenseRequest_lRec);
+                        LicenseRequest_lPge.Editable(false);
+                        LicenseRequest_lPge.RunModal();
+                    end;
+                }
+                field("License Qty."; Rec."License Qty.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the value of the Active Devices field.';
+
+                    trigger OnDrillDown()
+                    var
+                        DeviceLinke_lPge: Page "Dozee Devices";
+                        DeviceLinked_lRec: Record "Dozee Device";
+                    begin
+                        DeviceLinked_lRec.Reset();
+                        DeviceLinked_lRec.SetRange("Customer No.", REc."No.");
+                        DeviceLinked_lRec.SetRange(Licensed, true);
+                        DeviceLinke_lPge.SetTableView(DeviceLinked_lRec);
+                        DeviceLinke_lPge.Editable(false);
+                        DeviceLinke_lPge.RunModal();
+                    end;
+                }
+                field("Total Devices."; Rec."Total Devices.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the value of the Total Devices field.';
+
+                    trigger OnDrillDown()
+                    var
+                        DeviceLinke_lPge: Page "Dozee Devices";
+                        DeviceLinked_lRec: Record "Dozee Device";
+                    begin
+                        DeviceLinked_lRec.Reset();
+                        DeviceLinked_lRec.SetRange("Customer No.", REc."No.");
+                        DeviceLinked_lRec.SetRange(Return, false);
+                        DeviceLinke_lPge.SetTableView(DeviceLinked_lRec);
+                        DeviceLinke_lPge.Editable(false);
+                        DeviceLinke_lPge.RunModal();
+                    end;
+                }
+                field("Partner Devices"; rec."Partner Devices")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    Visible = Partner;
+                    ToolTip = 'Specifies the value of the Total Devices field.';
+
+                    trigger OnDrillDown()
+                    var
+                        DeviceLinke_lPge: Page "Dozee Devices";
+                        DeviceLinked_lRec: Record "Dozee Device";
+                    begin
+                        DeviceLinked_lRec.Reset();
+                        DeviceLinked_lRec.SetRange("Source No.", Rec."No.");
+                        DeviceLinked_lRec.SetRange(Return, false);
+                        DeviceLinke_lPge.SetTableView(DeviceLinked_lRec);
+                        DeviceLinke_lPge.Editable(false);
+                        DeviceLinke_lPge.RunModal();
+                    end;
+                }
             }
         }
     }
@@ -48,6 +125,17 @@ pageextension 52100 EMS_Customer extends "Customer Card"
         // Add changes to page actions here
     }
 
+    trigger OnOpenPage()
+    begin
+        SetVisibilityControl();
+    end;
+
     var
-        myInt: Integer;
+        Partner: Boolean;
+
+    local procedure SetVisibilityControl()
+    begin
+        if rec."Is Partner" then
+            Partner := true;
+    end;
 }

@@ -407,6 +407,12 @@ table 52101 "License Request"
                     "Pre-paid" := false;
             end;
         }
+        field(50; "No of devices assigned"; Integer)
+        {
+            FieldClass = FlowField;
+            CalcFormula = count("Dozee Device" where("License No." = field("License No."), Licensed = const(true), Return = const(false)));
+            Editable = false;
+        }
 
         field(60; "Parent Extension Of"; Code[20])
         {
@@ -529,6 +535,9 @@ table 52101 "License Request"
         key(Key1; "No.")
         {
             Clustered = true;
+        }
+        key(Key2; "License No.")
+        {
         }
     }
 
