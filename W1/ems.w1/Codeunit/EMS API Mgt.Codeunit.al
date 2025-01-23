@@ -5,7 +5,16 @@ codeunit 52106 "EMS API Mgt"
     end;
 
     var
-        EMSAPISetup_gRec: Record "EMS Setup";
+        EMSSetup: Record "EMS Setup";
+
+    local procedure GetEmsSetup()
+    begin
+        EMSSetup.Get();
+        if not EMSSetup.Enabled then
+            exit;
+        EMSSetup.TestField("Base URL");
+        EMSSetup.TestField("API Key");
+    end;
 
     procedure SendDeviceLicenseStatus(var DeviceLinkedToLicense: Record "Dozee Device")
     var
@@ -23,10 +32,9 @@ codeunit 52106 "EMS API Mgt"
         Clear(ParametersBody);
         Clear(ParametersBodyArray);
         ltext := '';
-        EMSAPISetup_gRec.Get();
-        IF NOT EMSAPISetup_gRec.Enabled then exit;
-        EMSAPISetup_gRec.TestField("Base URL");
-        EMSAPISetup_gRec.TestField("API Key");
+        GetEmsSetup();
+        IF NOT EMSSetup.Enabled then
+            exit;
         ParametersBody.Add('OrganizationId', Format(DeviceLinkedToLicense."Org ID"));
         ParametersBody.Add('DeviceId', DeviceLinkedToLicense."Device ID");
         ParametersBody.Add('LicenseId', DeviceLinkedToLicense."License No.");
@@ -36,14 +44,12 @@ codeunit 52106 "EMS API Mgt"
             ParametersBody.Add('Expiry', 0DT);
         ParametersBodyArray.Add(ParametersBody);
         ParametersBodyArray.WriteTo(ltext);
-        // IF GuiAllowed then
-        //     MESSAGE(FORMAT(ltext));
-        lurl := EMSAPISetup_gRec."Base URL";
+        lurl := EMSSetup."Base URL" + '/activate';
         gcontent.WriteFrom(ltext);
         greqMsg.SetRequestUri(lurl);
         lheaders.Clear();
         gcontent.GetHeaders(lheaders);
-        lheaders.Add('x-api-key', EMSAPISetup_gRec."API Key");
+        lheaders.Add('x-api-key', EMSSetup."API Key");
         lheaders.Remove('Content-Type');
         lheaders.Add('Content-Type', 'application/json');
         gcontent.GetHeaders(lheaders);
@@ -77,26 +83,23 @@ codeunit 52106 "EMS API Mgt"
         Clear(ParametersBodyArray);
         Clear(ReasonText);
         Clear(ltext);
-        EMSAPISetup_gRec.Get();
-        IF NOT EMSAPISetup_gRec.Enabled then exit;
-        EMSAPISetup_gRec.TestField("Base URL");
+        GetEmsSetup();
+        IF NOT EMSSetup.Enabled then
+            exit;
         If Status = Status::Terminated then
             ReasonText := 'CANCELLED'
         else
             ReasonText := 'EXPIRED';
-        EMSAPISetup_gRec.TestField("API Key");
         ParametersBody.Add('DeviceId', DeviceLinkedToLicense."Device ID");
         ParametersBody.Add('Reason', ReasonText);
         ParametersBodyArray.Add(ParametersBody);
         ParametersBodyArray.WriteTo(ltext);
-        // IF GuiAllowed then
-        //     MESSAGE(FORMAT(ltext));
-        lurl := EMSAPISetup_gRec."Base URL";
+        lurl := EMSSetup."Base URL" + '/deactivate';
         gcontent.WriteFrom(ltext);
         greqMsg.SetRequestUri(lurl);
         lheaders.Clear();
         gcontent.GetHeaders(lheaders);
-        lheaders.Add('x-api-key', EMSAPISetup_gRec."API Key");
+        lheaders.Add('x-api-key', EMSSetup."API Key");
         lheaders.Remove('Content-Type');
         lheaders.Add('Content-Type', 'application/json');
         gcontent.GetHeaders(lheaders);
@@ -130,20 +133,19 @@ codeunit 52106 "EMS API Mgt"
         InvalidDeviceIdErr: Label 'Blank Device ID received.';
     begin
         if (DeviceLinkedToLicense."Device ID" <> BlankGUID) then exit;
-        EMSAPISetup_gRec.Get();
-        if not EMSAPISetup_gRec.Enabled then exit;
+        GetEmsSetup();
+        if not EMSSetup.Enabled then
+            exit;
         Clear(lheaders);
         Clear(greqMsg);
         Clear(gResponseMsg);
         Clear(gHttpClient);
-        EMSAPISetup_gRec.TestField("Base URL");
-        EMSAPISetup_gRec.TestField("API Key");
         Sequence := CopyStr(DeviceLinkedToLicense."Serial No.", StrPos(DeviceLinkedToLicense."Serial No.", '-') + 1);
         Prefix := CopyStr(DeviceLinkedToLicense."Serial No.", 1, StrPos(DeviceLinkedToLicense."Serial No.", '-') - 1);
-        lurl := EMSAPISetup_gRec."Base URL";
+        lurl := EMSSetup."Base URL" + '/forerp/get?';
         lurl := lurl + 'sequence=' + Sequence + '&prefix=' + Prefix;
         greqMsg.GetHeaders(lheaders);
-        lheaders.Add('x-api-key', EMSAPISetup_gRec."API Key");
+        lheaders.Add('x-api-key', EMSSetup."API Key");
         greqMsg.Method := 'GET';
         greqMsg.SetRequestUri(lurl);
         if not gHttpClient.Send(greqMsg, gResponseMsg) then Error('API Authorization token request failed...');
@@ -180,9 +182,9 @@ codeunit 52106 "EMS API Mgt"
         Clear(ParametersBodyArray);
         Clear(lheaders);
         ltext := '';
-        EMSAPISetup_gRec.Get();
-        IF NOT EMSAPISetup_gRec.Enabled then exit;
-        EMSAPISetup_gRec.TestField("API Key");
+        GetEmsSetup();
+        IF NOT EMSSetup.Enabled then
+            exit;
         // IF DevicewithModel_lRec.Get(DeviceLinkedToLicense."Item No") then
         //     ParametersBody.Add('Model', DevicewithModel_lRec."Model Name")
         // else
@@ -195,7 +197,7 @@ codeunit 52106 "EMS API Mgt"
         gcontent.WriteFrom(ltext);
         greqMsg.SetRequestUri(lurl);
         gcontent.GetHeaders(lheaders);
-        lheaders.Add('x-api-key', EMSAPISetup_gRec."API Key");
+        lheaders.Add('x-api-key', EMSSetup."API Key");
         lheaders.Remove('Content-Type');
         lheaders.Add('Content-Type', 'application/json');
         greqMsg.Content(gcontent);
@@ -213,14 +215,13 @@ codeunit 52106 "EMS API Mgt"
         Clear(ParametersBody);
         Clear(ReasonText);
         Clear(ltext);
-        EMSAPISetup_gRec.Get();
-        IF NOT EMSAPISetup_gRec.Enabled then exit;
-        EMSAPISetup_gRec.TestField("Base URL");
+        GetEmsSetup();
+        IF NOT EMSSetup.Enabled then
+            exit;
         If Status = Status::Terminated then
             ReasonText := 'CANCELLED'
         else
             ReasonText := 'EXPIRED';
-        EMSAPISetup_gRec.TestField("API Key");
         ParametersBody.Add('DeviceId', DeviceLinkedToLicense."Device ID");
         ParametersBody.Add('Reason', ReasonText);
         ParametersBodyArray.Add(ParametersBody);
@@ -239,12 +240,12 @@ codeunit 52106 "EMS API Mgt"
         DeviceDetachMsg: Label 'The selected devices are detacheded from license, the devices license is set to expired';
     begin
         ParametersBodyArray.WriteTo(ltext);
-        lurl := EMSAPISetup_gRec."Base URL";
+        lurl := EMSSetup."Base URL" + '/deactivate';
         gcontent.WriteFrom(ltext);
         greqMsg.SetRequestUri(lurl);
         lheaders.Clear();
         gcontent.GetHeaders(lheaders);
-        lheaders.Add('x-api-key', EMSAPISetup_gRec."API Key");
+        lheaders.Add('x-api-key', EMSSetup."API Key");
         lheaders.Remove('Content-Type');
         lheaders.Add('Content-Type', 'application/json');
         gcontent.GetHeaders(lheaders);
@@ -273,12 +274,12 @@ codeunit 52106 "EMS API Mgt"
         DeviceAttachMsg: Label 'The selected devices are attached with license, the devices license is set to activated.';
     begin
         ParametersBodyArray.WriteTo(ltext);
-        lurl := EMSAPISetup_gRec."Base URL";
+        lurl := EMSSetup."Base URL" + '/activate';
         gcontent.WriteFrom(ltext);
         greqMsg.SetRequestUri(lurl);
         lheaders.Clear();
         gcontent.GetHeaders(lheaders);
-        lheaders.Add('x-api-key', EMSAPISetup_gRec."API Key");
+        lheaders.Add('x-api-key', EMSSetup."API Key");
         lheaders.Remove('Content-Type');
         lheaders.Add('Content-Type', 'application/json');
         gcontent.GetHeaders(lheaders);
@@ -301,10 +302,9 @@ codeunit 52106 "EMS API Mgt"
     begin
         Clear(ParametersBody);
         ltext := '';
-        EMSAPISetup_gRec.Get();
-        if not EMSAPISetup_gRec.Enabled then exit;
-        EMSAPISetup_gRec.TestField("Base URL");
-        EMSAPISetup_gRec.TestField("API Key");
+        GetEmsSetup();
+        if not EMSSetup.Enabled then
+            exit;
         ParametersBody.Add('OrganizationId', Format(DeviceLinkedToLicense."Org ID"));
         ParametersBody.Add('DeviceId', DeviceLinkedToLicense."Device ID");
         ParametersBody.Add('LicenseId', DeviceLinkedToLicense."License No.");
