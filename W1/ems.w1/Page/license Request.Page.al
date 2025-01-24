@@ -643,7 +643,9 @@ page 52102 "License Request"
                 {
                     Caption = 'Release', Comment = 'Generated from the PromotedActionCategories property index 4.';
                     ShowAs = SplitButton;
-
+                    actionref(activate_Promoted; Activate)
+                    {
+                    }
                     actionref(Release_Promoted; Release)
                     {
                     }

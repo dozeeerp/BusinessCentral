@@ -135,151 +135,150 @@ codeunit 52110 "License Mgmt."
         end;
     end;
 
-    // procedure CreateLicenseRequest(var OriginalLicense_iCod: Code[20]; Action_iOpt: Option "Issue Extension","Issue Renewal","Issue Add On","Convert to Commercial")
-    // begin
-    //     case Action_iOpt of
-    //         // Action_iOpt::"Issue Extension":
-    //         //     IssueExtension_lFnc(OriginalLicense_iCod);
-    //         Action_iOpt::"Issue Renewal":
-    //             IssueRenewal_lFnc(OriginalLicense_iCod);
-    //         Action_iOpt::"Issue Add On":
-    //             IssueAddOn_lFnc(OriginalLicense_iCod);
-    //     // Action_iOpt::"Convert to Commercial":
-    //     //     ConvertToCommercial(OriginalLicense_iCod);
-    //     // Action_iOpt::"Issue Notice":
-    //     //     IssueNotice(OriginalLicense_iCod);
-    //     end;
-    // end;
+    procedure CreateLicenseRequest(var OriginalLicense_iCod: Code[20]; Action_iOpt: Option "Issue Extension","Issue Renewal","Issue Add On","Convert to Commercial")
+    begin
+        case Action_iOpt of
+            // Action_iOpt::"Issue Extension":
+            //     IssueExtension_lFnc(OriginalLicense_iCod);
+            Action_iOpt::"Issue Renewal":
+                IssueRenewal_lFnc(OriginalLicense_iCod);
+            Action_iOpt::"Issue Add On":
+                IssueAddOn_lFnc(OriginalLicense_iCod);
+        // Action_iOpt::"Convert to Commercial":
+        //     ConvertToCommercial(OriginalLicense_iCod);
+        // Action_iOpt::"Issue Notice":
+        //     IssueNotice(OriginalLicense_iCod);
+        end;
+    end;
 
-    // local procedure IssueRenewal_lFnc(OriginalLicense_iCod: Code[20])
-    // var
-    //     LicenseRequest: Record "License Request";
-    //     SalesSetupRec: Record "Sales & Receivables Setup";
-    //     LicensRequestCard: Page "License Request";
-    //     NewLicCod_lCod: Code[20];
-    // begin
-    //     SalesSetupRec.GET;
-    //     SalesSetupRec.TESTFIELD("License Request No.");
-    //     GetOriginalLicense(OriginalLicense_iCod);
-    //     IF NOT (OriginalLicense_gRec."License Type" in [OriginalLicense_gRec."License Type"::Commercial, OriginalLicense_gRec."License Type"::MillionICU]) then
-    //         exit;
+    local procedure IssueRenewal_lFnc(OriginalLicense_iCod: Code[20])
+    var
+        LicenseRequest: Record "License Request";
+        LicensRequestCard: Page "License Request";
+        NewLicCod_lCod: Code[20];
+    begin
+        GetEmsSetup();
+        EMSSetup.TESTFIELD("License Request Nos.");
+        GetOriginalLicense(OriginalLicense_iCod);
+        IF NOT (OriginalLicense_gRec."License Type" in [OriginalLicense_gRec."License Type"::Commercial, OriginalLicense_gRec."License Type"::MillionICU]) then
+            exit;
 
-    //     OriginalLicense_gRec.Testfield(Renewed, false);
-    //     LicenseRequest.Reset();
-    //     LicenseRequest.SetRange("Parent Renewal Of", OriginalLicense_gRec."License No.");
-    //     IF NOT LicenseRequest.FindFirst() then begin
-    //         IF not Confirm('Do you want to Issue Renewal for Active License: %1?', true, OriginalLicense_gRec."License No.") then
-    //             exit;
-    //         OriginalLicense_gRec.TestField(Terminated, false);
-    //         OriginalLicense_gRec.TestField(Renewed, false);
-    //         OriginalLicense_gRec.TestField(Extended, false);
-    //         OriginalLicense_gRec.TestField("Converted from Notice", false);
+        OriginalLicense_gRec.Testfield(Renewed, false);
+        LicenseRequest.Reset();
+        LicenseRequest.SetRange("Parent Renewal Of", OriginalLicense_gRec."License No.");
+        IF NOT LicenseRequest.FindFirst() then begin
+            IF not Confirm('Do you want to Issue Renewal for Active License: %1?', true, OriginalLicense_gRec."License No.") then
+                exit;
+            OriginalLicense_gRec.TestField(Terminated, false);
+            OriginalLicense_gRec.TestField(Renewed, false);
+            OriginalLicense_gRec.TestField(Extended, false);
+            OriginalLicense_gRec.TestField("Converted from Notice", false);
 
-    //         LicenseRequest.Init();
-    //         LicenseRequest.TransferFields(OriginalLicense_gRec);
-    //         LicenseRequest."No. Series" := SalesSetupRec."License Request No.";
-    //         LicenseRequest."No." := '';
-    //         LicenseRequest."License No." := '';
-    //         LicenseRequest.Insert(true);
-    //         LicenseRequest."Document Type" := OriginalLicense_gRec."Document Type"::Renewal;
-    //         LicenseRequest."Parent Renewal Of" := OriginalLicense_gRec."License No.";
-    //         IF OriginalLicense_gRec."Original Renewal Of" <> '' then
-    //             LicenseRequest."Original Renewal Of" := OriginalLicense_gRec."Original Renewal Of"
-    //         else
-    //             LicenseRequest."Original Renewal Of" := OriginalLicense_gRec."License No.";
-    //         LicenseRequest.Validate("License Type", OriginalLicense_gRec."License Type");
-    //         // LicenseRequest."Activation Date" := CALCDATE('1D', OriginalLicense_gRec."Expiry Date");
-    //         // LicenseRequest."Expiry Date" := CalcDate(LicenseRequest.Duration, LicenseRequest."Activation Date");
-    //         LicenseRequest.ValidateActivationAndExpiryDate();
-    //         // LicenseRequest."Old Expiry Date" := LicenseRequest."Expiry Date";
-    //         LicenseRequest."Requested Activation Date" := 0D;
-    //         LicenseRequest.Status := LicenseRequest.Status::Open;
-    //         LicenseRequest.Dunning := false;
-    //         LicenseRequest."Dunning Type" := LicenseRequest."Dunning Type"::" ";
-    //         LicenseRequest.Modify(true);
-    //         NewLicCod_lCod := LicenseRequest."No.";
+            LicenseRequest.Init();
+            LicenseRequest.TransferFields(OriginalLicense_gRec);
+            LicenseRequest."No. Series" := EMSSetup."License Request Nos.";
+            LicenseRequest."No." := '';
+            LicenseRequest."License No." := '';
+            LicenseRequest.Insert(true);
+            LicenseRequest."Document Type" := OriginalLicense_gRec."Document Type"::Renewal;
+            LicenseRequest."Parent Renewal Of" := OriginalLicense_gRec."License No.";
+            IF OriginalLicense_gRec."Original Renewal Of" <> '' then
+                LicenseRequest."Original Renewal Of" := OriginalLicense_gRec."Original Renewal Of"
+            else
+                LicenseRequest."Original Renewal Of" := OriginalLicense_gRec."License No.";
+            LicenseRequest.Validate("License Type", OriginalLicense_gRec."License Type");
+            // LicenseRequest."Activation Date" := CALCDATE('1D', OriginalLicense_gRec."Expiry Date");
+            // LicenseRequest."Expiry Date" := CalcDate(LicenseRequest.Duration, LicenseRequest."Activation Date");
+            LicenseRequest.ValidateActivationAndExpiryDate();
+            // LicenseRequest."Old Expiry Date" := LicenseRequest."Expiry Date";
+            LicenseRequest."Requested Activation Date" := 0D;
+            LicenseRequest.Status := LicenseRequest.Status::Open;
+            LicenseRequest.Dunning := false;
+            LicenseRequest."Dunning Type" := LicenseRequest."Dunning Type"::" ";
+            LicenseRequest.Modify(true);
+            NewLicCod_lCod := LicenseRequest."No.";
 
-    //         OriginalLicense_gRec.Renewed := true;
-    //         // If OrignalLicense_gRec.Dunning then begin
-    //         //     OrignalLicense_gRec.Status := OrignalLicense_gRec.Status::Expired;
-    //         //     OrignalLicense_gRec."Expiry Date" := CalcDate('-1D', Today);
-    //         //     OrignalLicense_gRec.Dunning := false;
-    //         //     OrignalLicense_gRec."Dunning Type" := OrignalLicense_gRec."Dunning Type"::" ";
-    //         // end;
+            OriginalLicense_gRec.Renewed := true;
+            // If OrignalLicense_gRec.Dunning then begin
+            //     OrignalLicense_gRec.Status := OrignalLicense_gRec.Status::Expired;
+            //     OrignalLicense_gRec."Expiry Date" := CalcDate('-1D', Today);
+            //     OrignalLicense_gRec.Dunning := false;
+            //     OrignalLicense_gRec."Dunning Type" := OrignalLicense_gRec."Dunning Type"::" ";
+            // end;
 
-    //         OriginalLicense_gRec.Modify(true);
-    //         Commit();
-    //         LicenseRequest.Reset();
-    //         LicenseRequest.SetRange("No.", NewLicCod_lCod);
-    //         Clear(LicensRequestCard);
-    //         LicensRequestCard.SetTableView(LicenseRequest);
-    //         LicensRequestCard.RunModal();
-    //     end else
-    //         Error('Renewal already generated for License No: %1.', OriginalLicense_gRec."License No.");
-    // end;
+            OriginalLicense_gRec.Modify(true);
+            Commit();
+            LicenseRequest.Reset();
+            LicenseRequest.SetRange("No.", NewLicCod_lCod);
+            Clear(LicensRequestCard);
+            LicensRequestCard.SetTableView(LicenseRequest);
+            LicensRequestCard.RunModal();
+        end else
+            Error('Renewal already generated for License No: %1.', OriginalLicense_gRec."License No.");
+    end;
 
-    // local procedure IssueAddOn_lFnc(OriginalLicense_iCod: Code[20])
-    // var
-    //     LicenseRequest: Record "License Request";
-    //     SalesSetupRec: Record "Sales & Receivables Setup";
-    //     LicensRequestCard: Page "License Request";
-    //     NewLicCod_lCod: Code[20];
-    // begin
-    //     GetOriginalLicense(OriginalLicense_iCod);
-    //     SalesSetupRec.GET;
-    //     SalesSetupRec.TESTFIELD("License Request No.");
-    //     GetOriginalLicense(OriginalLicense_iCod);
-    //     IF NOT (OriginalLicense_gRec."License Type" in [OriginalLicense_gRec."License Type"::Commercial, OriginalLicense_gRec."License Type"::MillionICU]) then
-    //         exit;
-    //     LicenseRequest.Reset();
-    //     LicenseRequest.SetRange("Parent Add on Of", OriginalLicense_gRec."License No.");
-    //     IF NOT LicenseRequest.FindFirst() then begin
-    //         IF not Confirm('Do you want to Issue Add On for Active License: %1?', true, OriginalLicense_gRec."License No.") then
-    //             exit;
-    //         OriginalLicense_gRec.TestField(Terminated, false);
-    //         OriginalLicense_gRec.TestField(Renewed, false);
-    //         OriginalLicense_gRec.TestField(Extended, false);
-    //         OriginalLicense_gRec.TestField("Converted from Notice", false);
-    //         LicenseRequest.Init();
-    //         LicenseRequest.TransferFields(OriginalLicense_gRec);
-    //         LicenseRequest."No. Series" := SalesSetupRec."License Request No.";
-    //         LicenseRequest."No." := '';
-    //         LicenseRequest."License No." := '';
-    //         LicenseRequest.Insert(true);
-    //         LicenseRequest."Document Type" := OriginalLicense_gRec."Document Type"::"Add on";
-    //         LicenseRequest.Status := LicenseRequest.Status::Open;
-    //         LicenseRequest."Parent Add on Of" := OriginalLicense_gRec."License No.";
-    //         IF OriginalLicense_gRec."Original Add on Of" <> '' then
-    //             LicenseRequest."Original Add on Of" := OriginalLicense_gRec."Original Add on Of"
-    //         else
-    //             LicenseRequest."Original Add on Of" := OriginalLicense_gRec."License No.";
-    //         LicenseRequest.Validate("License Type", OriginalLicense_gRec."License Type");
-    //         LicenseRequest.validate("Activation Date", WorkDate());
-    //         //LicenseRequest."Expiry Date" := OrignalLicense_gRec."Expiry Date";
-    //         LicenseRequest."Requested Activation Date" := 0D;
-    //         // LicenseRequest.Dunning := false;
-    //         // LicenseRequest."Dunning Type" := LicenseRequest."Dunning Type"::" ";
+    local procedure IssueAddOn_lFnc(OriginalLicense_iCod: Code[20])
+    var
+        LicenseRequest: Record "License Request";
+        LicensRequestCard: Page "License Request";
+        NewLicCod_lCod: Code[20];
+    begin
+        GetOriginalLicense(OriginalLicense_iCod);
+        GetEmsSetup();
+        EMSSetup.GET;
+        EMSSetup.TESTFIELD("License Request Nos.");
+        GetOriginalLicense(OriginalLicense_iCod);
+        IF NOT (OriginalLicense_gRec."License Type" in [OriginalLicense_gRec."License Type"::Commercial, OriginalLicense_gRec."License Type"::MillionICU]) then
+            exit;
+        LicenseRequest.Reset();
+        LicenseRequest.SetRange("Parent Add on Of", OriginalLicense_gRec."License No.");
+        IF NOT LicenseRequest.FindFirst() then begin
+            IF not Confirm('Do you want to Issue Add On for Active License: %1?', true, OriginalLicense_gRec."License No.") then
+                exit;
+            OriginalLicense_gRec.TestField(Terminated, false);
+            OriginalLicense_gRec.TestField(Renewed, false);
+            OriginalLicense_gRec.TestField(Extended, false);
+            OriginalLicense_gRec.TestField("Converted from Notice", false);
+            LicenseRequest.Init();
+            LicenseRequest.TransferFields(OriginalLicense_gRec);
+            LicenseRequest."No. Series" := EMSSetup."License Request Nos.";
+            LicenseRequest."No." := '';
+            LicenseRequest."License No." := '';
+            LicenseRequest.Insert(true);
+            LicenseRequest."Document Type" := OriginalLicense_gRec."Document Type"::"Add on";
+            LicenseRequest.Status := LicenseRequest.Status::Open;
+            LicenseRequest."Parent Add on Of" := OriginalLicense_gRec."License No.";
+            IF OriginalLicense_gRec."Original Add on Of" <> '' then
+                LicenseRequest."Original Add on Of" := OriginalLicense_gRec."Original Add on Of"
+            else
+                LicenseRequest."Original Add on Of" := OriginalLicense_gRec."License No.";
+            LicenseRequest.Validate("License Type", OriginalLicense_gRec."License Type");
+            LicenseRequest.validate("Activation Date", WorkDate());
+            //LicenseRequest."Expiry Date" := OrignalLicense_gRec."Expiry Date";
+            LicenseRequest."Requested Activation Date" := 0D;
+            // LicenseRequest.Dunning := false;
+            // LicenseRequest."Dunning Type" := LicenseRequest."Dunning Type"::" ";
 
-    //         LicenseRequest.Modify(true);
-    //         NewLicCod_lCod := LicenseRequest."No.";
-    //         Commit();
-    //         LicenseRequest.Reset();
-    //         LicenseRequest.SetRange("No.", NewLicCod_lCod);
-    //     end;
-    //     Clear(LicensRequestCard);
-    //     LicensRequestCard.SetTableView(LicenseRequest);
-    //     LicensRequestCard.RunModal();
-    // end;
+            LicenseRequest.Modify(true);
+            NewLicCod_lCod := LicenseRequest."No.";
+            Commit();
+            LicenseRequest.Reset();
+            LicenseRequest.SetRange("No.", NewLicCod_lCod);
+        end;
+        Clear(LicensRequestCard);
+        LicensRequestCard.SetTableView(LicenseRequest);
+        LicensRequestCard.RunModal();
+    end;
 
-    // local procedure GetOriginalLicense(var OriginalLicense_iCod: Code[20])
-    // var
-    // begin
-    //     IF OriginalLicense_iCod = '' then
-    //         exit;
-    //     Clear(OriginalLicense_gRec);
-    //     OriginalLicense_gRec.get(OriginalLicense_iCod);
-    //     OriginalLicense_gRec.TestField(Status, OriginalLicense_gRec.Status::Active);
-    // end;
+    local procedure GetOriginalLicense(var OriginalLicense_iCod: Code[20])
+    var
+    begin
+        IF OriginalLicense_iCod = '' then
+            exit;
+        Clear(OriginalLicense_gRec);
+        OriginalLicense_gRec.get(OriginalLicense_iCod);
+        OriginalLicense_gRec.TestField(Status, OriginalLicense_gRec.Status::Active);
+    end;
 
     // [EventSubscriber(ObjectType::Codeunit, Codeunit::"License Email Sending", 'OnBeforeCreateEmailMessage', '', false, false)]
     // local procedure abc(var LicReq_iRec: Record "License Request"; var BCCListNew_iTxt: Text[1024]; var CCListNew_iTxt: Text[1024]; var RecipientsListNew_iTxt: Text[1024])
