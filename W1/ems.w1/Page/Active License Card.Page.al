@@ -456,7 +456,7 @@ page 52108 "Active License Card"
                     SinCodeeunit.InsertValue(Rec."No.");
                     Devicelinked.Reset();
                     Devicelinked.SetRange("Customer No.", Rec."Customer No.");
-                    IF Devicelinked.FindFirst() Then Page.Run(53008, Devicelinked);
+                    IF Devicelinked.FindFirst() Then Page.Run(Page::"Dozee Devices", Devicelinked);
                 end;
             }
             action("Issue Extension")

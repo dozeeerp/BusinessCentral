@@ -1103,6 +1103,18 @@ table 52101 "License Request"
         exit(false);
     end;
 
+    procedure MandatoryInvoiceNo()
+    var
+    begin
+        IF Rec."License Type" = Rec."License Type"::Commercial Then begin
+            IF "Pre-paid" then begin
+                TestField("Invoice No");
+                IF Rec."Invoice Qty" <> Rec."License Qty." then Error('Qty. is not matching');
+                IF Rec.Duration <> Rec."Invoice Duration" then Error('Duration is not matching');
+            end;
+        end;
+    end;
+
     internal procedure LicenseLinesExist(): Boolean
     begin
         // LicenseLine.Reset();
@@ -1116,33 +1128,86 @@ table 52101 "License Request"
     var
         CLE: Record "Cust. Ledger Entry";
     begin
-        // TestField("License Code");
-        // TestField(Duration);
-        // TestField("License Qty.");
-        // TestField("LIC-to E-Mail");
-        // IF /*"License Type" = LicenseRequest."License Type"::Commercial*/ rec."Pre-paid" then begin
-        //     TestField("Invoice No");
-        //     TestField("Invoice Qty");
-        //     TestField("Invoice Amount");
-        //     IF Rec."Invoice Qty" <> Rec."License Qty." then
-        //         Error('Quantity should be same as invoice quantity');
-        //     IF Rec.Duration <> Rec."Invoice Duration" then
-        //         Error('Duration should be same as invoice duration');
-        //     // IF Rec."Pre-paid" then begin
-        //     CLE.Reset();
-        //     CLE.SetRange("Document No.", Rec."Invoice No");
-        //     CLE.SetRange("Document Type", CLE."Document Type"::Invoice);
-        //     IF CLE.FindFirst() then begin
-        //         CLE.CalcFields("Remaining Amount", "Original Amount");
-        //         IF CLE."Remaining Amount" >= CLE."Original Amount" then
-        //             Error('No Payment received against Invoice: %1.', Rec."Invoice No");
-        //     end;
+        TestField("License Code");
+        TestField(Duration);
+        TestField("License Qty.");
+        TestField("E-Mail");
+        IF /*"License Type" = LicenseRequest."License Type"::Commercial*/ rec."Pre-paid" then begin
+            TestField("Invoice No");
+            TestField("Invoice Qty");
+            TestField("Invoice Amount");
+            IF Rec."Invoice Qty" <> Rec."License Qty." then
+                Error('Quantity should be same as invoice quantity');
+            IF Rec.Duration <> Rec."Invoice Duration" then
+                Error('Duration should be same as invoice duration');
+            // IF Rec."Pre-paid" then begin
+            CLE.Reset();
+            CLE.SetRange("Document No.", Rec."Invoice No");
+            CLE.SetRange("Document Type", CLE."Document Type"::Invoice);
+            IF CLE.FindFirst() then begin
+                CLE.CalcFields("Remaining Amount", "Original Amount");
+                IF CLE."Remaining Amount" >= CLE."Original Amount" then
+                    Error('No Payment received against Invoice: %1.', Rec."Invoice No");
+            end;
+        end;
         // end;
-        // // end;
         // if "License Type" = LicenseRequest."License Type"::MillionICU then begin
         //     TestField("Doner ID");
         //     TestField("License Value");
         // end;
+    end;
+
+    procedure ValidateActivationAndExpiryDate()
+    var
+        LicReq: Record "License Request";
+    begin
+        case rec."Document Type" of
+            "Document Type"::New:
+                begin
+                    if rec."Requested Activation Date" <> 0D then begin
+                        rec."Activation Date" := rec."Requested Activation Date";
+                    end else begin
+                        rec."Activation Date" := Today;
+                    end;
+                    rec."Expiry Date" := CalcDate(rec.Duration, rec."Activation Date");
+                    rec."Old Expiry Date" := rec."Expiry Date";
+                end;
+            "Document Type"::"Add on":
+                begin
+                    LicReq.Reset();
+                    LicReq.SetRange("License No.", rec."Parent Add on Of");
+                    if LicReq.FindFirst() then begin
+                        if (rec."Requested Activation Date" <> 0D) and
+                        (rec."Requested Activation Date" < LicReq."Old Expiry Date") then begin
+                            rec."Activation Date" := rec."Requested Activation Date";
+                        end else begin
+                            rec."Activation Date" := Today;
+                        end;
+                        rec."Expiry Date" := LicReq."Old Expiry Date";
+                        rec."Old Expiry Date" := rec."Expiry Date";
+                    end;
+                end;
+            "Document Type"::Extension:
+                begin
+                    LicReq.Reset();
+                    LicReq.SetRange("License No.", rec."Parent Extension Of");
+                    if LicReq.FindFirst() then begin
+                        rec."Activation Date" := CalcDate('1D', LicReq."Old Expiry Date");
+                        rec."Expiry Date" := CalcDate(rec.Duration, rec."Activation Date");
+                        rec."Old Expiry Date" := rec."Expiry Date";
+                    end;
+                end;
+            "Document Type"::Renewal:
+                begin
+                    LicReq.Reset();
+                    LicReq.SetRange("License No.", rec."Parent Renewal Of");
+                    if LicReq.FindFirst() then begin
+                        rec."Activation Date" := CalcDate('1D', LicReq."Old Expiry Date");
+                        rec."Expiry Date" := CalcDate(rec.Duration, rec."Activation Date");
+                        rec."Old Expiry Date" := rec."Expiry Date";
+                    end;
+                end;
+        end;
     end;
 
     [IntegrationEvent(TRUE, false)]

@@ -42,6 +42,11 @@ table 52100 "EMS Setup"
             DataClassification = CustomerContent;
             Caption = 'Dunning Days';
         }
+        field(8; "Email Notofication"; Boolean)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Email Notification';
+        }
     }
 
     keys

@@ -115,14 +115,14 @@ codeunit 52106 "EMS API Mgt"
         IF gResponseMsg.HttpStatusCode <> 201 then Error('Invalid Status Code: %1 received.', gResponseMsg.HttpStatusCode);
     end;
 
-    procedure GetDeviceLicenseId(var DeviceLinkedToLicense: Record "Dozee Device")
+    procedure GetDeviceLicenseId(var DozeeDevice: Record "Dozee Device")
     var
         lheaders: HttpHeaders;
         lurl: Text;
         gHttpClient: HttpClient;
         greqMsg: HttpRequestMessage;
         gResponseMsg: HttpResponseMessage;
-        BlankGUID: Guid;
+        // BlankGUID: Guid;
         Sequence, Prefix : Text;
         ResponseText: Text;
         DeviceIDTxt: Text;
@@ -132,7 +132,8 @@ codeunit 52106 "EMS API Mgt"
         JValueObject: JsonObject;
         InvalidDeviceIdErr: Label 'Blank Device ID received.';
     begin
-        if (DeviceLinkedToLicense."Device ID" <> BlankGUID) then exit;
+        if not IsNullGuid(DozeeDevice."Device ID") then
+            exit;
         GetEmsSetup();
         if not EMSSetup.Enabled then
             exit;
@@ -140,8 +141,8 @@ codeunit 52106 "EMS API Mgt"
         Clear(greqMsg);
         Clear(gResponseMsg);
         Clear(gHttpClient);
-        Sequence := CopyStr(DeviceLinkedToLicense."Serial No.", StrPos(DeviceLinkedToLicense."Serial No.", '-') + 1);
-        Prefix := CopyStr(DeviceLinkedToLicense."Serial No.", 1, StrPos(DeviceLinkedToLicense."Serial No.", '-') - 1);
+        Sequence := CopyStr(DozeeDevice."Serial No.", StrPos(DozeeDevice."Serial No.", '-') + 1);
+        Prefix := CopyStr(DozeeDevice."Serial No.", 1, StrPos(DozeeDevice."Serial No.", '-') - 1);
         lurl := EMSSetup."Base URL" + '/forerp/get?';
         lurl := lurl + 'sequence=' + Sequence + '&prefix=' + Prefix;
         greqMsg.GetHeaders(lheaders);
@@ -157,8 +158,8 @@ codeunit 52106 "EMS API Mgt"
         JValueObject.Get('RecorderId', JResultToken);
         DeviceIDTxt := JResultToken.AsValue().AsText();
         Evaluate(DeviceIdGuid, DeviceIDTxt);
-        if DeviceIdGuid <> BlankGUID then
-            DeviceLinkedToLicense."Device ID" := DeviceIdGuid
+        if not IsNullGuid(DeviceIdGuid) then
+            DozeeDevice."Device ID" := DeviceIdGuid
         else
             Error(InvalidDeviceIdErr);
     end;

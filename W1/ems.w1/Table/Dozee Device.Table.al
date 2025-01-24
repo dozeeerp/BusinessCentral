@@ -48,23 +48,23 @@ table 52103 "Dozee Device"
         {
             DataClassification = CustomerContent;
 
-            // trigger OnValidate()
-            // var
-            //     LicenseRequest: Record "License Request";
-            // begin
-            //     IF Rec."License No." <> '' then begin
-            //         LicenseRequest.Reset();
-            //         LicenseRequest.SetRange("License No.", Rec."License No.");
-            //         IF LicenseRequest.FindFirst() then begin
-            //             Rec."Activation Date" := LicenseRequest."Activation Date";
-            //             Rec."Expiry Date" := LicenseRequest."Expiry Date";
-            //         end;
-            //     end
-            //     else begin
-            //         Rec."Activation Date" := 0D;
-            //         Rec."Expiry Date" := 0D;
-            //     end;
-            // end;
+            trigger OnValidate()
+            var
+                LicenseRequest: Record "License Request";
+            begin
+                IF Rec."License No." <> '' then begin
+                    LicenseRequest.Reset();
+                    LicenseRequest.SetRange("License No.", Rec."License No.");
+                    IF LicenseRequest.FindFirst() then begin
+                        Rec."Activation Date" := LicenseRequest."Activation Date";
+                        Rec."Expiry Date" := LicenseRequest."Expiry Date";
+                    end;
+                end
+                else begin
+                    Rec."Activation Date" := 0D;
+                    Rec."Expiry Date" := 0D;
+                end;
+            end;
         }
         field(9; "Item No"; Code[20])
         {

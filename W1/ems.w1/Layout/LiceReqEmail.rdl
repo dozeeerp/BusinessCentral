@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+      <rd:SecurityType>None</rd:SecurityType>
+    </DataSource>
+  </DataSources>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>2in</Height>
+        <Style />
+      </Body>
+      <Width>6.5in</Width>
+      <Page>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <Code>Public Function BlankZero(ByVal Value As Decimal)
+    if Value = 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankPos(ByVal Value As Decimal)
+    if Value &gt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankZeroAndPos(ByVal Value As Decimal)
+    if Value &gt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNeg(ByVal Value As Decimal)
+    if Value &lt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNegAndZero(ByVal Value As Decimal)
+    if Value &lt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+</Code>
+  <Language>=User!Language</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="LicenseNo">
+          <DataField>LicenseNo</DataField>
+        </Field>
+        <Field Name="ExpiryDate">
+          <DataField>ExpiryDate</DataField>
+        </Field>
+        <Field Name="LicExpireInDay_gInt">
+          <DataField>LicExpireInDay_gInt</DataField>
+        </Field>
+        <Field Name="LicenseStatusCaption">
+          <DataField>LicenseStatusCaption</DataField>
+        </Field>
+        <Field Name="LicenseType_LicenseRequest">
+          <DataField>LicenseType_LicenseRequest</DataField>
+        </Field>
+        <Field Name="LICtoCustomerName_LicenseRequest">
+          <DataField>LICtoCustomerName_LicenseRequest</DataField>
+        </Field>
+        <Field Name="ActivationDate_LicenseRequest">
+          <DataField>ActivationDate_LicenseRequest</DataField>
+        </Field>
+        <Field Name="LICtoContact_LicenseRequest">
+          <DataField>LICtoContact_LicenseRequest</DataField>
+        </Field>
+        <Field Name="LICtoPhoneNo_LicenseRequest">
+          <DataField>LICtoPhoneNo_LicenseRequest</DataField>
+        </Field>
+        <Field Name="LICtoEMail_LicenseRequest">
+          <DataField>LICtoEMail_LicenseRequest</DataField>
+        </Field>
+        <Field Name="DeviceCoveredunderLicense">
+          <DataField>DeviceCoveredunderLicense</DataField>
+        </Field>
+        <Field Name="LicenseCode_LicenseRequest">
+          <DataField>LicenseCode_LicenseRequest</DataField>
+        </Field>
+        <Field Name="OldExpiryDate_LicenseRequest">
+          <DataField>OldExpiryDate_LicenseRequest</DataField>
+        </Field>
+        <Field Name="Duning_Days">
+          <DataField>Duning_Days</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
+</Report>
