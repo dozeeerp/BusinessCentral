@@ -7,7 +7,7 @@
             "request": "launch",
             "environmentType": "Sandbox",
             "environmentName": "Sandbox_US",
-            "startupObjectId": 22,
+            "startupObjectId": 52101,
             "startupObjectType": "Page",
             "breakOnError": "All",
             "breakOnRecordWrite": "None",
@@ -15,7 +15,8 @@
             "enableSqlInformationDebugger": true,
             "enableLongRunningSqlStatements": true,
             "longRunningSqlStatementsThreshold": 500,
-            "numberOfSqlStatements": 10
+            "numberOfSqlStatements": 10,
+            "schemaUpdateMode": "ForceSync"
         }
     ]
 }

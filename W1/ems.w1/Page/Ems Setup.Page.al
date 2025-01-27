@@ -32,6 +32,12 @@ page 52100 "Ems Setup"
                     Caption = 'Enabled';
                     ToolTip = 'Specifies the communication in enabled with Dozee Cloud.';
                 }
+                field("Email Notofication"; Rec."Email Notofication")
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Email Notification';
+                    ToolTip = 'Specifies if the email communication will be sent to customer based on license activity.';
+                }
                 field("Dunning Days"; Rec."Dunning Days")
                 {
                     ApplicationArea = Basic, Suite;

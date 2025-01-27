@@ -9,6 +9,7 @@ page 52101 "License Requests"
     DataCaptionFields = "Customer No.";
     CardPageId = "License Request";
     Editable = false;
+    SourceTableView = where(Status = filter(Open | "Pending Approval" | Released));
 
     layout
     {

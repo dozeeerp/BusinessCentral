@@ -18,6 +18,33 @@ tableextension 52100 "EMS Customer" extends Customer
             DataClassification = CustomerContent;
             Caption = 'Is Partner';
         }
+        field(52103; "License Details"; Integer)
+        {
+            FieldClass = FlowField;
+            Caption = 'Available Licenses';
+            CalcFormula = sum("License Request"."License Qty." where("Customer No." = field("No."), Status = const(Active)));
+            //Editable = false;
+        }
+        field(52104; "License Qty."; Integer)
+        {
+            FieldClass = FlowField;
+            Caption = 'Active Devices';
+            CalcFormula = count("Dozee Device" where("Customer No." = field("No."), Licensed = const(true)));
+            //Editable = false;
+        }
+        field(52105; "Total Devices."; Integer)
+        {
+            FieldClass = FlowField;
+            Caption = 'Total Devices';
+            CalcFormula = count("Dozee Device" where("Customer No." = field("No."), Return = const(false)));
+            //Editable = false;
+        }
+        field(52106; "Partner Devices"; Integer)
+        {
+            Caption = 'Partner Devices';
+            FieldClass = FlowField;
+            CalcFormula = count("Dozee Device" where("Source No." = field("No."), Return = const(false)));
+        }
     }
 
     keys
