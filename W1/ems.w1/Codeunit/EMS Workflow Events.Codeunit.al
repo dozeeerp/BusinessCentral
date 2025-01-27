@@ -34,7 +34,7 @@ codeunit 52101 "EMS Workflow Events"
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Event Handling", 'OnAddWorkflowTableRelationsToLibrary', '', false, false)]
-    local procedure AddWorkflowTableRelationsToLibrary()
+    procedure AddWorkflowTableRelationsToLibrary()
     var
         WorkflowSetup: Codeunit "Workflow Setup";
     begin
