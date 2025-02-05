@@ -9,7 +9,7 @@ using Microsoft.Warehouse.Request;
 using TSTChanges.FA.Tracking;
 using TSTChanges.Automation;
 using System.Utilities;
-using Microsoft.Finance.TaxBase;
+// using Microsoft.Finance.TaxBase;
 using Microsoft.Foundation.AuditCodes;
 using Microsoft.Foundation.Shipping;
 using TSTChanges.FA.Conversion;
@@ -721,16 +721,16 @@ table 51214 "FA Transfer Header"
                 CreateDimFromDefaultDim(FieldNo("Transfer-to Customer"));
             end;
         }
-        field(82; "Transfer-from State Code"; Code[10])
-        {
-            Caption = 'Transfer-from State Code';
-            TableRelation = State.Code;
-        }
-        field(83; "Transfer-to State Code"; Code[10])
-        {
-            Caption = 'Transfer-to State Code';
-            TableRelation = State.Code;
-        }
+        // field(82; "Transfer-from State Code"; Code[10])
+        // {
+        //     Caption = 'Transfer-from State Code';
+        //     TableRelation = State.Code;
+        // }
+        // field(83; "Transfer-to State Code"; Code[10])
+        // {
+        //     Caption = 'Transfer-to State Code';
+        //     TableRelation = State.Code;
+        // }
         field(480; "Dimension Set ID"; Integer)
         {
             Caption = 'Dimension Set ID';
@@ -846,7 +846,7 @@ table 51214 "FA Transfer Header"
         "Transfer-to County" := Location.County;
         "Trsf.-to Country/Region Code" := Location."Country/Region Code";
         "Transfer-to Contact" := Location.Contact;
-        "Transfer-to State Code" := Location."State Code";
+        // "Transfer-to State Code" := Location."State Code";
 
         if not Location."Demo Location" then
             "Transfer-to Customer" := '';
@@ -866,7 +866,7 @@ table 51214 "FA Transfer Header"
         "Transfer-to County" := Customer.County;
         "Trsf.-to Country/Region Code" := Customer."Country/Region Code";
         "Transfer-to Contact" := Customer.Contact;
-        "Transfer-to State Code" := Customer."State Code";
+        // "Transfer-to State Code" := Customer."State Code";
 
         // OnAfterInitFromTransferToLocation(Rec, Location);
     end;
@@ -882,7 +882,7 @@ table 51214 "FA Transfer Header"
         "Transfer-from County" := Location.County;
         "Trsf.-from Country/Region Code" := Location."Country/Region Code";
         "Transfer-from Contact" := Location.Contact;
-        "Transfer-from State Code" := Location."State Code";
+        // "Transfer-from State Code" := Location."State Code";
 
         if not Location."Demo Location" then
             "Transfer-from Customer" := '';
@@ -901,7 +901,7 @@ table 51214 "FA Transfer Header"
         "Transfer-from County" := Customer.County;
         "Trsf.-from Country/Region Code" := Customer."Country/Region Code";
         "Transfer-from Contact" := Customer.Contact;
-        "Transfer-from State Code" := Customer."State Code";
+        // "Transfer-from State Code" := Customer."State Code";
     end;
 
     procedure AssistEdit(OldFATransHeader: Record "FA Transfer Header"): Boolean

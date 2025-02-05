@@ -10,7 +10,14 @@
   "help": "",
   "url": "",
   "logo": "",
-  "dependencies": [],
+  "dependencies": [
+    {
+      "id": "eb554e93-d25c-48f8-add7-41fae41496d2",
+      "name": "ems.w1",
+      "version": "1.0.0.0",
+      "publisher": "TST"
+    }
+  ],
   "screenshots": [],
   "platform": "1.0.0.0",
   "application": "22.0.0.0",

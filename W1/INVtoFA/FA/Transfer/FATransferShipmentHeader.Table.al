@@ -10,7 +10,7 @@ using Microsoft.Inventory.Intrastat;
 using Microsoft.Foundation.NoSeries;
 using TSTChanges.FA.Tracking;
 using Microsoft.Foundation.Reporting;
-using Microsoft.Finance.TaxBase;
+// using Microsoft.Finance.TaxBase;
 using Microsoft.Inventory.Comment;
 
 table 51216 "FA Transfer Shipment Header"
@@ -244,16 +244,16 @@ table 51216 "FA Transfer Shipment Header"
             Caption = 'Transfer-to Customer';
             TableRelation = Customer;
         }
-        field(82; "Transfer-from State Code"; Code[10])
-        {
-            Caption = 'Transfer-from State Code';
-            TableRelation = State.Code;
-        }
-        field(83; "Transfer-to State Code"; Code[10])
-        {
-            Caption = 'Transfer-to State Code';
-            TableRelation = State.Code;
-        }
+        // field(82; "Transfer-from State Code"; Code[10])
+        // {
+        //     Caption = 'Transfer-from State Code';
+        //     TableRelation = State.Code;
+        // }
+        // field(83; "Transfer-to State Code"; Code[10])
+        // {
+        //     Caption = 'Transfer-to State Code';
+        //     TableRelation = State.Code;
+        // }
         field(480; "Dimension Set ID"; Integer)
         {
             Caption = 'Dimension Set ID';
@@ -390,8 +390,8 @@ table 51216 "FA Transfer Shipment Header"
         "Direct Transfer" := FATransHeader."Direct Transfer";
         "Transfer-from Customer" := FATransHeader."Transfer-from Customer";
         "Transfer-to Customer" := FATransHeader."Transfer-to Customer";
-        "Transfer-from State Code" := FATransHeader."Transfer-from State Code";
-        "Transfer-to State Code" := FATransHeader."Transfer-to State Code";
+        // "Transfer-from State Code" := FATransHeader."Transfer-from State Code";
+        // "Transfer-to State Code" := FATransHeader."Transfer-to State Code";
 
         OnAfterCopyFromTransferHeader(Rec, FATransHeader);
     end;

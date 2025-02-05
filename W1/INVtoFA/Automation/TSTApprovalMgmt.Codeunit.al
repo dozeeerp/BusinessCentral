@@ -7,7 +7,7 @@ using System.Environment.Configuration;
 using TSTChanges.FA.Transfer;
 using TSTChanges.FA.FAItem;
 
-codeunit 51011 "TST Approvals Mgmt"
+codeunit 51235 "TST Approvals Mgmt"
 {
     Permissions = TableData "Approval Entry" = Rimd,
                   TableData "Approval Comment Line" = rimd,

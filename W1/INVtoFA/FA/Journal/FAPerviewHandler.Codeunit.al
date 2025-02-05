@@ -5,7 +5,7 @@ using Microsoft.Foundation.Navigate;
 using TSTChanges.FA.Transfer;
 using TSTChanges.FA.Posting;
 using TSTChanges.FA.History;
-using Microsoft.Finance.GST.Base;
+// using Microsoft.Finance.GST.Base;
 using TSTChanges.FA.Ledger;
 
 codeunit 51213 "FA Preview Handler"
@@ -14,7 +14,7 @@ codeunit 51213 "FA Preview Handler"
 
     var
         TempFAItemLedgerEntry: Record "FA Item ledger Entry" temporary;
-        TempDozeeDevice: Record "Device linked to License" temporary;
+        TempDozeeDevice: Record "Dozee Device" temporary;
         TempDozeeDeviceArchive: Record "Archive Device Led. Entry" temporary;
         DocumentNoTxt: Label '***', Locked = true;
         PreviewPosting: Boolean;
@@ -26,7 +26,7 @@ codeunit 51213 "FA Preview Handler"
         Case TableNo of
             Database::"FA Item ledger Entry":
                 RecRef.GETTABLE(TempFAItemLedgerEntry);
-            Database::"Device linked to License":
+            Database::"Dozee Device":
                 RecRef.GetTable(TempDozeeDevice);
             Database::"Archive Device Led. Entry":
                 RecRef.GetTable(TempDozeeDeviceArchive);
@@ -39,8 +39,8 @@ codeunit 51213 "FA Preview Handler"
         case TableNo of
             Database::"FA Item ledger Entry":
                 Page.Run(PAGE::"FA Item Ledger Entries", TempFAItemLedgerEntry);
-            Database::"Device linked to License":
-                Page.Run(Page::"Device linked to License list", TempDozeeDevice);
+            Database::"Dozee Device":
+                Page.Run(Page::"Dozee Devices", TempDozeeDevice);
             Database::"Archive Device Led. Entry":
                 Page.Run(Page::"Archive Device Ledger Entry", TempDozeeDeviceArchive);
         end;
@@ -60,8 +60,8 @@ codeunit 51213 "FA Preview Handler"
         TempFAItemLedgerEntry.Insert();
     end;
 
-    [EventSubscriber(ObjectType::Table, Database::"Device linked to License", OnAfterInsertEvent, '', false, false)]
-    local procedure SavePreviewDozeeDeviceEntry(var Rec: Record "Device linked to License"; RunTrigger: Boolean)
+    [EventSubscriber(ObjectType::Table, Database::"Dozee Device", OnAfterInsertEvent, '', false, false)]
+    local procedure SavePreviewDozeeDeviceEntry(var Rec: Record "Dozee Device"; RunTrigger: Boolean)
     begin
         if not PreviewPosting then
             exit;

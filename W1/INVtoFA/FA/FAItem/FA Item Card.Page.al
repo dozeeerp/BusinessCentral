@@ -91,16 +91,16 @@ page 51201 "FA Item Card"
                 {
                     ApplicationArea = Basic, Suite;
                 }
-                field("GST Group Code"; Rec."GST Group Code")
-                {
-                    ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies an unique identifier for the GST group code used to calculate and post GST.';
-                }
-                field("HSN/SAC Code"; Rec."HSN/SAC Code")
-                {
-                    ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies an unique identifier for the type of HSN or SAC that is used to calculate and post GST.';
-                }
+                // field("GST Group Code"; Rec."GST Group Code")
+                // {
+                //     ApplicationArea = Basic, Suite;
+                //     ToolTip = 'Specifies an unique identifier for the GST group code used to calculate and post GST.';
+                // }
+                // field("HSN/SAC Code"; Rec."HSN/SAC Code")
+                // {
+                //     ApplicationArea = Basic, Suite;
+                //     ToolTip = 'Specifies an unique identifier for the type of HSN or SAC that is used to calculate and post GST.';
+                // }
             }
             group(InventoryGrp)
             {
@@ -217,11 +217,11 @@ page 51201 "FA Item Card"
                 {
                     ApplicationArea = FixedAssets;
                 }
-                field("FA Block Code"; Rec."FA Block Code")
-                {
-                    ApplicationArea = FixedAssets;
-                    ToolTip = 'Specifies the FA Block Code for Income tax Depreciation Book.';
-                }
+                // field("FA Block Code"; Rec."FA Block Code")
+                // {
+                //     ApplicationArea = FixedAssets;
+                //     ToolTip = 'Specifies the FA Block Code for Income tax Depreciation Book.';
+                // }
                 field("No. of Depreciation Years"; Rec."No. of Depreciation Years")
                 {
                     ApplicationArea = FixedAssets;

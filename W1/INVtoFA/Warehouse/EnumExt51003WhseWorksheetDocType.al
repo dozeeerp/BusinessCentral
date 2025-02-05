@@ -4,7 +4,7 @@ using Microsoft.Warehouse.Worksheet;
 
 enumextension 51203 TST_WhseWorkDocType extends "Warehouse Worksheet Document Type"
 {
-    value(51000; "Conversion")
+    value(51200; "Conversion")
     {
         Caption = 'Conversion';
     }

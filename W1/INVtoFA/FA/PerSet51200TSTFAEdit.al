@@ -28,7 +28,7 @@ permissionset 51200 "TST FA, EDIT"
         tabledata "FA Depreciation Book" = RI,
         tabledata "FA Subclass" = R,
         tabledata "FA Class" = R,
-        tabledata "Fixed Asset Block" = R,
+        // tabledata "Fixed Asset Block" = R,
         tabledata "FA Posting Group" = R,
         table "FA Adjmt. Entry (Order)" = X,
         table "FA Conversion Header" = X,
@@ -81,8 +81,8 @@ permissionset 51200 "TST FA, EDIT"
         codeunit "Release Conversion Document" = X,
         codeunit "Release FA Transfer Document" = X,
         codeunit "Show Applied FA Entries" = X,
-        codeunit "TST Upgrade Tag Defination" = X,
-        codeunit "TST Upgrade Workflow" = X,
+        // codeunit "TST Upgrade Tag Defination" = X,
+        // codeunit "TST Upgrade Workflow" = X,
         codeunit "TST WMS Management" = X,
         codeunit "TST Workflow Setup" = X,
         codeunit TSTDocumentNoVisibility = X,
@@ -125,13 +125,13 @@ permissionset 51200 "TST FA, EDIT"
         codeunit "TST Approvals Mgmt" = X,
         codeunit "TST Document Attchment" = X,
         codeunit "TST Record Restriction Mgt" = X,
-        codeunit "TST Report Mgt." = X,
+        // codeunit "TST Report Mgt." = X,
         codeunit "TST Undo Posting Management" = X,
         codeunit "TST Workflow Events" = X,
         codeunit "TST Workflow Responses" = X,
         codeunit "Undo FA Transfer Shipment" = X,
         page "FA Conversion Setup" = X,
         page "FA Item Variant Card" = X,
-        page "FA Item Variants" = X,
-        page "TST Source Documents" = X;
+        page "FA Item Variants" = X;
+    // page "TST Source Documents" = X;
 }

@@ -13,15 +13,15 @@ using TSTChanges.FA.Setup;
 using TSTChanges.FA.FAItem;
 using Microsoft.Inventory.Tracking;
 using Microsoft.FixedAssets.Setup;
-using Microsoft.FixedAssets.FADepreciation;
+// using Microsoft.FixedAssets.FADepreciation;
 
 codeunit 51208 "FA Item Jnl.-Post Line"
 {
     Permissions = TableData "Fixed Asset" = rim,
                   TableData "FA Depreciation Book" = ri,
                   TableData "FA Subclass" = r,
-                  tabledata "FA Class" = r,
-                  tabledata "Fixed Asset Block" = r;
+                  tabledata "FA Class" = r;
+    //   tabledata "Fixed Asset Block" = r;
     TableNo = "FA Item Journal Line";
     trigger OnRun()
     begin
@@ -1150,7 +1150,7 @@ codeunit 51208 "FA Item Jnl.-Post Line"
         FixedAsset.validate("FA Class Code", FAItem."FA Class Code");
         FixedAsset.Validate("FA Subclass Code", FAItem."FA Subclass Code");
         FixedAsset."FA Posting Group" := FAItem."FA Posting Group";
-        FixedAsset."FA Block Code" := FAItem."FA Block Code";
+        // FixedAsset."FA Block Code" := FAItem."FA Block Code";
         FixedAsset.Modify(true);
 
         //Insert Fixed Asset Depreciation Books - Company

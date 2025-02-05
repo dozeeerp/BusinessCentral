@@ -7,7 +7,7 @@ using Microsoft.Sales.Customer;
 using Microsoft.Foundation.Shipping;
 using Microsoft.Foundation.NoSeries;
 using Microsoft.Foundation.Reporting;
-using Microsoft.Finance.TaxBase;
+// using Microsoft.Finance.TaxBase;
 using Microsoft.Inventory.Comment;
 using Microsoft.Foundation.Address;
 using Microsoft.Inventory.Location;
@@ -235,16 +235,16 @@ table 51218 "FA Transfer Receipt Header"
             Caption = 'Transfer-to Customer';
             TableRelation = Customer;
         }
-        field(82; "Transfer-from State Code"; Code[10])
-        {
-            Caption = 'Transfer-from State Code';
-            TableRelation = State.Code;
-        }
-        field(83; "Transfer-to State Code"; Code[10])
-        {
-            Caption = 'Transfer-to State Code';
-            TableRelation = State.Code;
-        }
+        // field(82; "Transfer-from State Code"; Code[10])
+        // {
+        //     Caption = 'Transfer-from State Code';
+        //     TableRelation = State.Code;
+        // }
+        // field(83; "Transfer-to State Code"; Code[10])
+        // {
+        //     Caption = 'Transfer-to State Code';
+        //     TableRelation = State.Code;
+        // }
         field(480; "Dimension Set ID"; Integer)
         {
             Caption = 'Dimension Set ID';
@@ -377,8 +377,8 @@ table 51218 "FA Transfer Receipt Header"
 
         "Transfer-from Customer" := FATransHeader."Transfer-from Customer";
         "Transfer-to Customer" := FATransHeader."Transfer-to Customer";
-        "Transfer-from State Code" := FATransHeader."Transfer-from State Code";
-        "Transfer-to State Code" := FATransHeader."Transfer-to State Code";
+        // "Transfer-from State Code" := FATransHeader."Transfer-from State Code";
+        // "Transfer-to State Code" := FATransHeader."Transfer-to State Code";
 
         OnAfterCopyFromTransferHeader(Rec, FATransHeader);
     end;

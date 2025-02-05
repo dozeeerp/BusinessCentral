@@ -1,7 +1,7 @@
 namespace TSTChanges.FA.FAItem;
 
 using Microsoft.FixedAssets.Setup;
-using Microsoft.Finance.GST.Base;
+// using Microsoft.Finance.GST.Base;
 using Microsoft.FixedAssets.FixedAsset;
 using TSTChanges.FA.Tracking;
 using TSTChanges.FA.Ledger;
@@ -10,7 +10,7 @@ using Microsoft.Foundation.UOM;
 using Microsoft.Foundation.NoSeries;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Setup;
-using Microsoft.FixedAssets.FADepreciation;
+// using Microsoft.FixedAssets.FADepreciation;
 using Microsoft.Utilities;
 using TSTChanges.FA.Transfer;
 using System.Automation;
@@ -167,12 +167,12 @@ table 51200 "FA Item"
             FieldClass = FlowFilter;
             TableRelation = "Unit of Measure";
         }
-        field(15; "FA Block Code"; Code[10])
-        {
-            DataClassification = CustomerContent;
-            Caption = 'FA Block Code';
-            TableRelation = "Fixed Asset Block".Code where("FA Class Code" = field("FA Class Code"));
-        }
+        // field(15; "FA Block Code"; Code[10])
+        // {
+        //     DataClassification = CustomerContent;
+        //     Caption = 'FA Block Code';
+        //     TableRelation = "Fixed Asset Block".Code where("FA Class Code" = field("FA Class Code"));
+        // }
         field(16; "No. of Depreciation Years"; Decimal)
         {
             DataClassification = CustomerContent;
@@ -430,18 +430,18 @@ table 51200 "FA Item"
             Caption = 'MRP';
             DataClassification = CustomerContent;
         }
-        field(42; "GST Group Code"; code[20])
-        {
-            Caption = 'GST Group Code';
-            DataClassification = CustomerContent;
-            TableRelation = "GST Group";
-        }
-        field(43; "HSN/SAC Code"; code[10])
-        {
-            Caption = 'HSN/SAC Code';
-            DataClassification = CustomerContent;
-            TableRelation = "HSN/SAC".Code where("GST Group Code" = field("GST Group Code"));
-        }
+        // field(42; "GST Group Code"; code[20])
+        // {
+        //     Caption = 'GST Group Code';
+        //     DataClassification = CustomerContent;
+        //     TableRelation = "GST Group";
+        // }
+        // field(43; "HSN/SAC Code"; code[10])
+        // {
+        //     Caption = 'HSN/SAC Code';
+        //     DataClassification = CustomerContent;
+        //     TableRelation = "HSN/SAC".Code where("GST Group Code" = field("GST Group Code"));
+        // }
         field(44; "Variant Mandatory if Exists"; Option)
         {
             Caption = 'Variant Mandatory if Exists';
@@ -705,7 +705,7 @@ table 51200 "FA Item"
         TestField("FA Class Code");
         TestField("FA Posting Group");
         TestField("FA Subclass Code");
-        TestField("FA Block Code");
+        // TestField("FA Block Code");
         TestField("No. of Depreciation Years");
     end;
 
