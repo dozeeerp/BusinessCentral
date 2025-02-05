@@ -2,7 +2,7 @@
   "country": "w1",
   "appFolders": [],
   "testFolders": [],
-  "DeployToQA":{
+  "DeployToTST-QA":{
     "EnvironmentName": "Sandbox_US",
     "continuousDeployment": true
   }
