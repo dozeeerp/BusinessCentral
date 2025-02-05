@@ -1,0 +1,45 @@
+{
+  "id": "ea41d739-2c20-40f3-a360-0b8d5f5053c2",
+  "name": "HubSpot Connector",
+  "publisher": "TST",
+  "version": "1.0.41.1",
+  "brief": "",
+  "description": "",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "",
+  "url": "",
+  "logo": "",
+  "dependencies": [
+    {
+      "id": "eb554e93-d25c-48f8-add7-41fae41496d2",
+      "name": "ems.w1",
+      "version": "1.0.0.0",
+      "publisher": "TST"
+    },
+    {
+      "id": "60c5fbe2-0fe2-4f02-989d-c8edd1a98465",
+      "name": "INVtoFA",
+      "version": "1.0.0.0",
+      "publisher": "TST"
+    }
+  ],
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "22.0.0.0",
+  "idRanges": [
+    {
+      "from": 51300,
+      "to": 51399
+    }
+  ],
+  "features": [
+    "NoImplicitWith"
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": false,
+    "includeSourceInSymbolFile": false
+  },
+  "runtime": "12.0"
+}

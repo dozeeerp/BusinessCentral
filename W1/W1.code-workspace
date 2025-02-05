@@ -7,6 +7,9 @@
       "path": "INVtoFA"
     },
     {
+      "path": "HubSpotConnector"
+    },
+    {
       "path": ".AL-Go"
     }
   ],
