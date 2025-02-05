@@ -2678,15 +2678,6 @@ End Function</Code>
         <Field Name="CompInfo_Picture">
           <DataField>CompInfo_Picture</DataField>
         </Field>
-        <Field Name="CompInfo_PAN_No">
-          <DataField>CompInfo_PAN_No</DataField>
-        </Field>
-        <Field Name="CompInfo_GSTIN">
-          <DataField>CompInfo_GSTIN</DataField>
-        </Field>
-        <Field Name="CompInfo_CIN_No">
-          <DataField>CompInfo_CIN_No</DataField>
-        </Field>
         <Field Name="CompInfo_Name">
           <DataField>CompInfo_Name</DataField>
         </Field>
@@ -2753,50 +2744,11 @@ End Function</Code>
         <Field Name="DocNo_TransShptLine">
           <DataField>DocNo_TransShptLine</DataField>
         </Field>
-        <Field Name="FAItem_HSNSACCode">
-          <DataField>FAItem_HSNSACCode</DataField>
-        </Field>
         <Field Name="FAItem_MRP">
           <DataField>FAItem_MRP</DataField>
         </Field>
         <Field Name="FAItem_MRPFormat">
           <DataField>FAItem_MRPFormat</DataField>
-        </Field>
-        <Field Name="IGSTAmt">
-          <DataField>IGSTAmt</DataField>
-        </Field>
-        <Field Name="IGSTAmtFormat">
-          <DataField>IGSTAmtFormat</DataField>
-        </Field>
-        <Field Name="CGSTAmt">
-          <DataField>CGSTAmt</DataField>
-        </Field>
-        <Field Name="CGSTAmtFormat">
-          <DataField>CGSTAmtFormat</DataField>
-        </Field>
-        <Field Name="SGSTAmt">
-          <DataField>SGSTAmt</DataField>
-        </Field>
-        <Field Name="SGSTAmtFormat">
-          <DataField>SGSTAmtFormat</DataField>
-        </Field>
-        <Field Name="IGSTPer">
-          <DataField>IGSTPer</DataField>
-        </Field>
-        <Field Name="IGSTPerFormat">
-          <DataField>IGSTPerFormat</DataField>
-        </Field>
-        <Field Name="CGSTPer">
-          <DataField>CGSTPer</DataField>
-        </Field>
-        <Field Name="CGSTPerFormat">
-          <DataField>CGSTPerFormat</DataField>
-        </Field>
-        <Field Name="SGSTPer">
-          <DataField>SGSTPer</DataField>
-        </Field>
-        <Field Name="SGSTPerFormat">
-          <DataField>SGSTPerFormat</DataField>
         </Field>
         <Field Name="BaseAmount">
           <DataField>BaseAmount</DataField>
