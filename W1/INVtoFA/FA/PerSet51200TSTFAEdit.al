@@ -28,6 +28,8 @@ permissionset 51200 "TST FA, EDIT"
         tabledata "FA Depreciation Book" = RI,
         tabledata "FA Subclass" = R,
         tabledata "FA Class" = R,
+        tabledata "FA Direct Trans. Header" = RIMD,
+        tabledata "FA Direct Trans. Line" = RIMD,
         // tabledata "Fixed Asset Block" = R,
         tabledata "FA Posting Group" = R,
         table "FA Adjmt. Entry (Order)" = X,
