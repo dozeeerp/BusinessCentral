@@ -3,7 +3,7 @@
   "appFolders": [],
   "testFolders": [],
   "DeployToQA":{
-    "EnvironmentName": "QA",
+    "EnvironmentName": "Sandbox_US",
     "continuousDeployment": true
   }
 }
