@@ -39,13 +39,13 @@ table 51306 "HubSpot Contact"
         }
         field(8; "Contact SystemId"; Guid)
         {
-            Caption = 'Customer SystemId';
+            Caption = 'Contact SystemId';
             DataClassification = SystemMetadata;
         }
         field(9; "Contact No."; Code[20])
         {
             CalcFormula = lookup(Contact."No." where(SystemId = field("Contact SystemId")));
-            Caption = 'Customer No.';
+            Caption = 'Contact No.';
             FieldClass = FlowField;
         }
         field(10; "Job Title"; Text[30])
@@ -102,6 +102,11 @@ table 51306 "HubSpot Contact"
         {
             Caption = 'Finanacial Communication';
             DataClassification = CustomerContent;
+        }
+        field(22; "Company Name"; Text[100])
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup(contact.Name where("No." = field("Company No.")));
         }
     }
 

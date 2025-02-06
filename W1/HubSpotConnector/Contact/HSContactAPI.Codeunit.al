@@ -40,7 +40,10 @@ codeunit 51315 "Hubspot Contact API"
     end;
 
     local procedure ContactProperty(PropertyObject: JsonObject; HubSpotContact: Record "HubSpot Contact")
+    var
+        HSSetup: Record "Hubspot Setup";
     begin
+        HSSetup.Get();
         PropertyObject.Add('firstname', HubSpotContact."First Name");
         PropertyObject.Add('salutation', HubSpotContact."Salutation Code");
         PropertyObject.Add('jobtitle', HubSpotContact."Job Title");
@@ -58,6 +61,8 @@ codeunit 51315 "Hubspot Contact API"
         PropertyObject.Add('fin__communication', HubSpotContact."Financial Comm");
         HubSpotContact.CalcFields("Contact No.");
         PropertyObject.Add('erp_contact_no_', HubSpotContact."Contact No.");
+        if HSSetup."Business Unit" <> '' then
+            PropertyObject.Add('hs_all_assigned_business_unit_ids', HSSetup."Business Unit");
     end;
 
     internal procedure RetrieveHubspotContactIds(var ContactIds: Dictionary of [BigInteger, DateTime])
@@ -118,6 +123,7 @@ codeunit 51315 "Hubspot Contact API"
             + 'properties=jobtitle&properties=middle_name&properties=lastname&properties=address&properties=address_2&'
             + 'properties=city&properties=country&properties=zip&properties=hubspot_owner_id&properties=erp_company_no&'
             + 'properties=email&properties=phone&properties=mobilephone&properties=hs_object_id&properties=fin__communication&archived=false';
+        OnAfterAddingPropertiesToContact(Property);
         if JResponse.ReadFrom(HSConnect.GetObjectInfo(Object, Property)) then
             exit(UpdateHubspotContactFields(HubspotContact, JResponse));
     end;
@@ -154,6 +160,7 @@ codeunit 51315 "Hubspot Contact API"
             if Cont.Get(JsonHelper.GetValueAsText(JResponse, 'properties.erp_contact_no_')) then
                 HubspotContact."Contact SystemId" := Cont.SystemId;
         end;
+        OnAfterUpdateHubspotContactFields(HubspotContact, JResponse);
         HubspotContact.Modify();
     end;
 
@@ -162,15 +169,46 @@ codeunit 51315 "Hubspot Contact API"
         JResponse: JsonToken;
         JArray: JsonArray;
         JItem: JsonToken;
+        AssociationArray: JsonArray;
+        AssociationToken: JsonToken;
     begin
         if JResponse.ReadFrom(HSConnect.GetAssociationInfo('contact', Format(ContactId), 'company')) then begin
             JsonHelper.GetJsonArray(JResponse, JArray, 'results');
-            if JArray.Count > 1 then
-                Error('Contact must be associates with one company only.');
-            foreach JItem in JArray do begin
+            // if JArray.Count > 1 then
+            //     Error('Contact must be associates with one company only.');
+            // foreach JItem in JArray do begin
+            //     CompanyId := JsonHelper.GetValueAsBigInteger(JItem, 'toObjectId');
+            //     exit(true);
+            // end;
+            if JArray.Count = 1 then begin
+                JArray.Get(0, JItem);
                 CompanyId := JsonHelper.GetValueAsBigInteger(JItem, 'toObjectId');
                 exit(true);
             end;
+
+
+            foreach AssociationToken in JArray do begin
+                JsonHelper.GetJsonArray(AssociationToken, AssociationArray, 'associationTypes');
+                foreach JItem in AssociationArray do begin
+                    if JsonHelper.GetValueAsText(JItem, 'label').ToLower() = 'primary' then begin
+                        CompanyId := JsonHelper.GetValueAsBigInteger(AssociationToken, 'toObjectId');
+                        exit(true);
+                    end;
+
+                    // exit(JsonHelper.GetValueAsText(AssociationToken, 'toObjectId'));
+                end;
+            end;
         end;
+        exit(false);
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnAfterAddingPropertiesToContact(var Property: Text)
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnAfterUpdateHubspotContactFields(var HubspotContact: Record "HubSpot Contact"; JResponse: JsonToken)
+    begin
     end;
 }

@@ -784,18 +784,6 @@ codeunit 51301 "Hubspot API Mgmt"
         Clear(AObject);
 
         if PipelineType = PipelineType::AddOn then begin
-            // Response := HSConnect.GetObjectInfo('ticket', Format(HSObjectId) + '/associations/ticket?limit=500');
-            // if Response = '' then
-            //     Error('Demo ticket not found.');
-            // RJToken.ReadFrom(Response);
-            // RJObject := RJToken.AsObject();
-            // if RJObject.Get('results', RJToken) then begin
-            //     RJArray := RJToken.AsArray();
-
-            //     foreach RJToken in RJArray do begin
-            //         RJObject := RJToken.AsObject();
-            //         if RJObject.Get('id', RJToken) then 
-            // begin
             JObject.Add('associationCategory', 'USER_DEFINED');
             JObject.Add('associationTypeId', HSSetup."AssociationID Ticket to Device");
             JArray.add(JObject);
@@ -805,10 +793,7 @@ codeunit 51301 "Hubspot API Mgmt"
             AObject.Add('to', JObject);
             Clear(JObject);
             AJArray.Add(AObject);
-            // end;
         end;
-        // end;
-        // end;
 
         case RecRef.Number of
             Database::"Item Ledger Entry":
@@ -844,6 +829,8 @@ codeunit 51301 "Hubspot API Mgmt"
                     PJObject.Add('quantity', FAILE.Quantity);
                 end;
         end;
+        if HSSetup."Business Unit" <> '' then
+            PJObject.Add('hs_all_assigned_business_unit_ids', HSSetup."Business Unit");
 
         JObjectout.Add('associations', AJArray);
         JObjectOut.Add('properties', PJObject);
@@ -925,6 +912,7 @@ codeunit 51301 "Hubspot API Mgmt"
         ILE: Record "Item Ledger Entry";
         FAILE: Record "FA Item ledger Entry";
     begin
+        HSSetup.Get();
         PropertyObject.Add('license_activated', DozeeDevice.Licensed);
         PropertyObject.Add('license_no', DozeeDevice."License No.");
         if DozeeDevice."Activation Date" <> 0D then
@@ -974,6 +962,9 @@ codeunit 51301 "Hubspot API Mgmt"
                 PropertyObject.Add('quantity', ILE.Quantity);
             end;
         end;
+
+        if HSSetup."Business Unit" <> '' then
+            PropertyObject.Add('hs_all_assigned_business_unit_ids', HSSetup."Business Unit");
 
         InputsObject.Add('properties', PropertyObject);
         InputsArray.Add(InputsObject);

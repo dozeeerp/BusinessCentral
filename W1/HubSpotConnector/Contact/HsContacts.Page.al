@@ -45,6 +45,10 @@ page 51306 "HubSpot Contacts"
                     ApplicationArea = Basic, Suite;
                     ToolTip = 'Specifies the contact''s name.';
                 }
+                field("Company Name"; Rec."Company Name")
+                {
+                    ApplicationArea = Basic, Suite;
+                }
             }
         }
         area(Factboxes)

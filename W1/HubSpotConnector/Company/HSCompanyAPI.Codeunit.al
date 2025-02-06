@@ -47,7 +47,10 @@ codeunit 51308 "Hubspot Company API"
     end;
 
     local procedure CompanyPropertyObject(var PropertyObject: JsonObject; HubspotCompany: Record "Hubspot Company")
+    var
+        HSSetup: Record "Hubspot Setup";
     begin
+        HSSetup.Get();
         PropertyObject.Add('name', HubspotCompany.Name);
         PropertyObject.Add('address', HubspotCompany.Address);
         PropertyObject.Add('address2', HubspotCompany."Address 2");
@@ -72,6 +75,9 @@ codeunit 51308 "Hubspot Company API"
         // PropertyObject.Add('type', '');
         HubspotCompany.CalcFields("Customer No.");
         PropertyObject.Add('erp_customer_no_', HubspotCompany."Customer No.");
+
+        if HSSetup."Business Unit" <> '' then
+            PropertyObject.Add('hs_all_assigned_business_unit_ids', HSSetup."Business Unit");
     end;
 
     internal procedure RetrieveHubspotCompanyIds(var CompanyIds: Dictionary of [BigInteger, DateTime])
@@ -137,6 +143,7 @@ codeunit 51308 "Hubspot Company API"
                     '&properties=primary_contact&properties=primary_contact_no&properties=hubspot_owner_id' +
                     '&properties=phone&properties=mobile_phone_no_&properties=currency_code&properties=gst_registration_no_' +
                     '&properties=p_a_n__no_&properties=zone_of_the_hospital&properties=type&&properties=erp_customer_no_&archived=false';
+        OnAfterAddingPropertiesToCustomer(Property);
         if JResponse.ReadFrom(HSConnect.GetObjectInfo(Object, Property)) then
             exit(UpdateHubspotCompanyFields(HubspotCompany, JResponse));
     end;
@@ -180,6 +187,17 @@ codeunit 51308 "Hubspot Company API"
             if Cust.Get(JsonHelper.GetValueAsText(JResponse, 'properties.erp_customer_no_')) then
                 HubspotCompany."Customer SystemId" := Cust.SystemId;
         end;
+        OnAfterUpdateHubspotCompanyFields(HubspotCompany, JResponse);
         HubspotCompany.Modify();
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnAfterAddingPropertiesToCustomer(var Property: Text)
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnAfterUpdateHubspotCompanyFields(var HubspotCompany: Record "Hubspot Company"; JResponse: JsonToken)
+    begin
     end;
 }
